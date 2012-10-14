@@ -1,0 +1,22 @@
+
+Utility application for Fritzing.
+Scavenges a new SMD package for a part in the "Mystery SMD" family.
+Scavenge means it searches existing SMD packages for compatible packages (desired number of pads, etc.)
+
+GUI for choosing the number of connectors (pins or pads) and the SMD package you want to scavenge.
+
+"Mystery SMD" means the breadboard and schematic images will be abstract.
+But the PCB SMD land pattern image will be real.
+
+Experimental and fragile.  Hardcoded directories means it only works for Fritzing 7.7b installed in user home on Linux.
+(But you can change the program in a few places to make it work for your installation.)
+
+Work in progress. See TODO in the file fritzingPackageScavenger.py.
+
+Also, it creates a .fzp file in ~/.config/Fritzing/parts/user.
+The package doesn't appear in Fritzing unless you already have a "Mystery SMD" part.
+And you may need to restart Fritzing.
+Or you may need to search for the part e.g. using "SMD" search phrase.
+
+
+
