@@ -11,9 +11,10 @@ class FritzingFootprintLayer(object):
   !!! as represented by XML tree. 
   '''
   
-  def __init__(self, group):
+  def __init__(self, group, parentFootprint):
     self.group = group
     self.pinpad = None   
+    self.parentFootprint = parentFootprint
     self.connectorPattern = re.compile("connector[0-9]+(pin|pad)")
     
   
@@ -49,17 +50,23 @@ class FritzingFootprintLayer(object):
       but might be less understandable to XML DOM programmers.
       '''
       if each.nodeType == each.ELEMENT_NODE:
-        if each.hasAttribute('connectorname') and  self._checkConnectorID(each):
+        '''
+        Previously, constrained to elements having attribute 'connectorname' but that is too restrictive,
+        since Fritzing doesn't require it: in absence Fritzing shows ???
+        '''
+        if each.hasAttribute('id') and  self._checkConnectorID(each):
             connectorCount += 1
         
     if not connectorCount > 0:
-      print "Fritzing PCB SVG without name on each connector???"
+      print "Fritzing PCB SVG without recognizable connector elements in group copper1 ?", self.parentFootprint.landPatternName()
     return connectorCount
   
   
   def _checkConnectorID(self, element):
     '''
-    Assert element is a connector.
+    Assert element has attribute 'id' and is in a "copper1" group.
+    Reputed to be a Fritzing connector.
+    Don't care if it has attribute 'connectorname'
     Check:
     - has an id
     - id matches canonical pattern

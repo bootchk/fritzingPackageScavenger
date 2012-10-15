@@ -4,6 +4,8 @@ Copyright 2012 Lloyd Konneker
 This is free software, covered by the GNU General Public License.
 '''
 import os
+import glob
+from xml.parsers.expat import ExpatError
 
 from PySide.QtGui import *
 from fritzingFootprint import FritzingFootprint
@@ -32,13 +34,27 @@ class FritzingFootprintDirectory(dict):
     count = 0
     
     for fileName in self._fritzingSvgPcbFiles():
-      footprint = FritzingFootprint(fileName)
+      try:
+        footprint = FritzingFootprint(fileName)
+      except ExpatError:
+        print "Failed to parse", fileName
+        continue
+      
       if footprint.isSMD():
         QApplication.processEvents()
         progress.setValue(count)
         if progress.wasCanceled():
           break;
         print fileName
+        
+        '''
+        !!! If there are many files with same name in different directories,
+        a later one (in order directories are searched) replaces earlier one.
+        TODO tell later directory
+        '''
+        if fileName in self:
+          print "Replacing earlier definition with: ", fileName
+          
         self[fileName] = footprint
         count +=1
         #if count > 5:
@@ -75,13 +91,32 @@ class FritzingFootprintDirectory(dict):
     List of filenames.
     All distributed PCB image files.
     '''
+    
+    result = []
+    for directoryName in self._fritzingSvgPcbDirectories():
+      print "Searching directory for svg files: ", directoryName
+      # !!! Don't return extraneous .txt etc. files
+      # !!! Does not catch .SVG
+      result = result + glob.glob(directoryName + '/*.svg')
+    return result
+  
+  
+  def _fritzingSvgPcbDirectories(self):
+    ''' 
+    Generates directories where Fritzing PCB SVG files can be found. 
+    
+    !!! Note order defines what we believe to be the most authoritative,
+    since later files replace earlier with same name (see note elsewhere.)
+    Thus the order defines user created files as most authoritative.
+    '''
     # TODO also core/pcb ?
     # TODO find Fritzing install location
     home = os.path.expanduser('~')
-    directoryName = home + '/fritzing-0.7.7b.linux.i386/parts/svg/contrib/pcb/*'
-    import glob
-    return glob.glob(directoryName)
-      
+    # Distributed with Fritzing
+    yield home + '/fritzing-0.7.7b.linux.i386/parts/svg/contrib/pcb'
+    yield home + '/fritzing-0.7.7b.linux.i386/parts/svg/core/pcb'
+    # Local user created
+    yield home + '/.config/Fritzing/parts/svg/user/pcb'
     
   
   def _fritzingSMDSvgPcbFiles(self, desiredPinCount):

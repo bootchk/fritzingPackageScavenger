@@ -25,14 +25,13 @@ class FritzingFootprint(object):
   def __init__(self, filename):
     '''
     Assert filename is XML meeting Fritzing DTD for a footprint (breadboard, schematic, or PCB image)
-    
-    
     '''
-    self.dom = parse(filename)
     self.filename = filename
-    
     self.copperLayer = []
+    
+    self.dom = parse(filename)  # throws ExpatError on XML parsing failure
     self._parseCopperLayers()
+
     
 
   def _parseCopperLayers(self):
@@ -54,6 +53,8 @@ class FritzingFootprint(object):
     or have holes.  Most will not be aberrant.
     
     Example: <g id="copper1"> etc.
+    
+    !!! Note groups may still be aberrant: fail to have connectors.
     '''
     if self.copperLayer[1] and not self.copperLayer[0] and not self.copperLayer[1].hasHole():
       return True
@@ -80,7 +81,7 @@ class FritzingFootprint(object):
     ''' Return object for copper layer with layerOrdinal  or None. '''
     for each in self._groupsSVG():
       if self._groupIsCopperLayer(each, layerOrdinal):
-        return FritzingFootprintLayer(each)
+        return FritzingFootprintLayer(each, parentFootprint=self)
     return None
   
   
