@@ -13,13 +13,10 @@ TODO
 
 generated .fzp filename follow conventions?
 
-query Fritzing for version number: see hardcoded in template
 
-find Fritzing package directory: see hardcoded below
+more robust, cross-platform find Fritzing package directory.
 
-generate to current user home/.config/Fritzing directory: see hardcoded in partFactory
-
-search all Fritzing package directories: contrib, core, etc.
+cross-platform finding user home/.config/Fritzing directory: see partFactory
 
 Mystery Part 3 schematic is flaky?
 

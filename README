@@ -8,15 +8,21 @@ GUI for choosing the number of connectors (pins or pads) and the SMD package you
 "Mystery SMD" means the breadboard and schematic images will be abstract.
 But the PCB SMD land pattern image will be real.
 
-Experimental and fragile.  Hardcoded directories means it only works for Fritzing 7.7b installed in user home on Linux.
+Experimental and fragile.  Hardcoded directories means it only works for Fritzing installed in user home on Linux.
 (But you can change the program in a few places to make it work for your installation.)
 
 Work in progress. See TODO in the file fritzingPackageScavenger.py.
 
-Also, it creates a .fzp file in ~/.config/Fritzing/parts/user.
-The package doesn't appear in Fritzing unless you already have a "Mystery SMD" part.
-And you may need to restart Fritzing.
-Or you may need to search for the part e.g. using "SMD" search phrase.
+It creates a .fzp file in ~/.config/Fritzing/parts/user.
+
+The package doesn't appear in Fritzing unless you:
+- search for the part e.g. using "SMD" search phrase
+- drag the part to the "Mine" bin
+
+Once you have any Mystery SMD part in your Mine bin, you won't need to search again and drag more packages to the Mine bin.
+
+Once you place a Mystery SMD part, you can change the pin count and package, to any of the SMD packages you have scavenged.
+
 
 
 

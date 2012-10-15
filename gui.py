@@ -84,7 +84,7 @@ class ScavengeDialog(QDialog):
     # initial state
     buttonBox.button(QDialogButtonBox.Ok).setEnabled(False) # until user chooses list item
     
-    self.setWindowTitle("Mystery SMD Package Scavenger")
+    self.setWindowTitle(App.appName)
 
 
   '''
@@ -111,6 +111,8 @@ class ScavengeDialog(QDialog):
 
 class App(QApplication):
   
+  appName = "Mystery SMD Package Scavenger"
+  
   def __init__(self, args):
     super(App, self).__init__(args)
     
@@ -126,5 +128,12 @@ class App(QApplication):
     
     dialog = ScavengeDialog(directory)
     dialog.exec_()
+    
+    if dialog.result() == QDialog.Accepted:
+      msgBox = QMessageBox()
+      msgBox.setWindowTitle(App.appName)
+      msgBox.setText(r"""Part created.  To use the part, restart Fritzing, search parts by name of the chosen package, and drag the part to "Mine" bin.""");
+      msgBox.exec_()
+    
 
         

@@ -109,12 +109,18 @@ class FritzingFootprintDirectory(dict):
     since later files replace earlier with same name (see note elsewhere.)
     Thus the order defines user created files as most authoritative.
     '''
-    # TODO also core/pcb ?
-    # TODO find Fritzing install location
+    # TODO more robust, cross-platform finding appropriate directories
+    
     home = os.path.expanduser('~')
+    # If many versions of Fritzing installed, use only the last (latest?)
+    fritzingInstallDirectoryName = glob.glob(home + '/fritzing-*')[-1]
+    
     # Distributed with Fritzing
-    yield home + '/fritzing-0.7.7b.linux.i386/parts/svg/contrib/pcb'
-    yield home + '/fritzing-0.7.7b.linux.i386/parts/svg/core/pcb'
+    # yield home + '/fritzing-0.7.7b.linux.i386/parts/svg/contrib/pcb'
+    # yield home + '/fritzing-0.7.7b.linux.i386/parts/svg/core/pcb'
+    yield fritzingInstallDirectoryName + '/parts/svg/contrib/pcb'
+    yield fritzingInstallDirectoryName + '/parts/svg/core/pcb'
+    
     # Local user created
     yield home + '/.config/Fritzing/parts/svg/user/pcb'
     

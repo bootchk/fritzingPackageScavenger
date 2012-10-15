@@ -14,12 +14,17 @@ TODO
 
 Uses "Mystery Part" images.  Support also "Generic IC", or just "Generic IC"
 As noted on net, there is overlap, both are not needed.
+But Mystery Part is only 2,3,4 pins.
+Need switch to Generic IC for greater pin count.
 
+<property name="editable chip label">true</property>     not working?  typo?
+'''
+
+'''
 other parameters in the template:
-  # Fritzing version?
-  # date
-
-
+  Fritzing version: Fritzing doesn't check it and soon generates a different one internally
+  date: same as above
+  <property name="layout">Single Row</property> ??? Allows switching of Mystery Part breadboard image ???
 '''
 
 class AnySMDPartFactory(object):
@@ -52,6 +57,7 @@ class AnySMDPartFactory(object):
     <properties>
         <property name="family">$family</property>
         <property name="package">$packageName</property>
+        <property name="pins">${connectorCount}</property>
         <property name="editable pin labels">true</property>
         <property name="chip label">?</property>
         <property name="part number">?</property>
@@ -123,6 +129,8 @@ class AnySMDPartFactory(object):
     '''
     #print "produce", pcbSvgFilename
     
+    familyName = "Mystery SMD"  # TODO parameter
+    
     packageName = footprint.landPatternName()
     
     moduleId = self._uniqueModuleId()
@@ -138,13 +146,14 @@ class AnySMDPartFactory(object):
     fzpFileContents = templateDraft1.substitute(pcbSvgFilename=packageName,
                                                packageName=packageName,
                                                moduleId = moduleId,
-                                               family = "Mystery SMD", # TODO parameter
+                                               family = familyName,
                                                connectorCount = footprint.connectorCount(),
                                                pinpad = footprint.pinPad())
     
     home = os.path.expanduser('~')
     # TODO cross platform
-    outFilename = home + "/.config/Fritzing/parts/user/" + "MysterySMD_"+ packageName + ".fzp"
+    # TODO remove spaces from names?
+    outFilename = home + "/.config/Fritzing/parts/user/" + familyName + packageName + ".fzp"
 
     with open(outFilename, "w") as f:
       f.write(fzpFileContents)
