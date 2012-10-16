@@ -18,6 +18,11 @@ But Mystery Part is only 2,3,4 pins.
 Need switch to Generic IC for greater pin count.
 
 <property name="editable chip label">true</property>     not working?  typo?
+<property name="spacing">100mil</property>
+
+These are obsolete names?  They don't fit on the breadboard?
+mystery_part${connectorCount}.svg
+mystery_part${connectorCount}.svg
 '''
 
 '''
@@ -70,12 +75,12 @@ class AnySMDPartFactory(object):
             </layers>
         </iconView>
         <breadboardView>
-            <layers image="breadboard/mystery_part${connectorCount}.svg">
+            <layers image="breadboard/mystery_part_${connectorCount}_sip_100mil_bread.svg">
                 <layer layerId="breadboard"/>
             </layers>
         </breadboardView>
         <schematicView>
-            <layers image="schematic/mystery_part${connectorCount}.svg">
+            <layers image="schematic/mystery_part_${connectorCount}_schem.svg">
                 <layer layerId="schematic"/>
             </layers>
         </schematicView>
@@ -95,8 +100,12 @@ class AnySMDPartFactory(object):
  
   '''
   !!! Note $connector at end, for iteration
+  
+  !!! Note type means sex: must be male to fit in breadboard.  Immaterial for PCB.
+  
+  Default name is connector ordinal.
   '''
-  connectorTemplate = Template(r"""<connector id="connector${ordinal}" type="none" name="unnamed">
+  connectorTemplate = Template(r"""<connector id="connector${ordinal}" type="male" name="${ordinal}">
             <description>none</description>
             <views>
                 <breadboardView>
